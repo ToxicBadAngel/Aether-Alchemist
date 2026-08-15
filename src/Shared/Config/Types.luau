@@ -8,6 +8,7 @@
 
 export type Rarity = "Common" | "Rare" | "Epic" | "Mythic"
 export type Element = "Earth" | "Fire" | "Ocean" | "Wind" | "Lightning" | "Void"
+export type RGBColor = { R: number, G: number, B: number }
 
 -- // 1. Erze & Bergbau
 export type OreId =
@@ -30,7 +31,7 @@ export type OreConfig = {
     DropMax: number,
     ExtraDropChance: number?,
     RespawnTime: number,
-    PointLightColor: Color3,
+    PointLightColor: RGBColor,
     PointLightRange: number,
     PointLightBrightness: number,
 }
