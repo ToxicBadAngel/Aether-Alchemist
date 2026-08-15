@@ -278,5 +278,47 @@ Das Wesen schwebt neben der Schulter des Spielers und wird per Taste `E` / Mobil
   - *Vegetation & Props*: Schwebende Monolithen, Meteoriten-Krater, monumentales Boss-Portal.
   - *Lichtstimmung*: Dunkle Mondnacht mit Aether-Nebel (`ClockTime = 21.0`, dichter Atmosphären-Haze, magischer Glow).
 
+---
+
+## 📌 17. Server-weite Chat-Ankündigungen (Social Proof & Rare Events)
+- **Formatierte RichText-Nachrichten im Server-Chat**:
+  - *Mythischer Erzfund*: `[🌟 AETHER]: Spieler XYZ hat einen mythischen Void-Kristall abgebaut!` (Goldener Text).
+  - *Tier 5 Waffencraft*: `[⚔️ ALCHEMIE]: Spieler XYZ hat die legendäre Void-Schattenklinge geschmiedet!` (Magenta-Goldener Text).
+  - *Boss-Sieg*: `[👑 BOSS]: Kristall-Koloss wurde von einer Gruppe um Spieler XYZ bezwungen!` (Feuer-Roter Text).
+- **Zweck**: Fördert soziale Interaktion, Neugier und die Motivation anderer Spieler, weiterzuspielen.
+
+---
+
+## 📌 18. In-World Bestenlisten (Dorfplatz-Stelen)
+- **3 Physische Marmor-Stelen auf dem Dorfplatz**:
+  1. **Top Alchemisten (Höchste Level)**: Rang 1 bis 10 mit Spieler-Avataren.
+  2. **Meister-Schürfer (Meiste Erze)**: Rang 1 bis 10.
+  3. **Koloss-Bezwinger (Meiste Boss-Kills)**: Rang 1 bis 10.
+- **Aktualisierung**: Alle 60 Sekunden live vom Server über `OrderedDataStore`.
+
+---
+
+## 📌 19. Tägliche Login-Belohnungen & Playtime-Gifts (Retention-Engine)
+- **7-Tage Daily Streak**:
+  - Tag 1: 50 Aether-Essenz
+  - Tag 2: 2x `Feuer-Rubin` + 1x `Inferno-Trank`
+  - Tag 3: 150 Aether-Essenz
+  - Tag 4: 2x `Blitz-Amethyst`
+  - Tag 5: 1x `Aether-Elixier` (+50% XP)
+  - Tag 6: 1x `Koloss-Splitter`
+  - Tag 7: 1x `Void-Kristall` + 500 Aether-Essenz (Großer Jackpot)
+- **10-Minuten Playtime-Gift**:
+  - Alle 10 Minuten aktiver Spielzeit kann ein Geschenk im HUD geöffnet werden (+40 Essenz & zufälliges Zone-1-Erz).
+
+---
+
+## 📌 20. Settings-, Performance- & Mobile-Optimierung
+- **Settings-Fenster (GlassPanel)**:
+  - *Musik-Lautstärke* (Slider 0% .. 100%)
+  - *SFX-Lautstärke* (Slider 0% .. 100%)
+  - *Kamera-Shake* (Toggle: An / Aus)
+  - *Low-Performance-Modus* (Toggle: Schaltet Partikel-Dichte herunter und deaktiviert Post-Processing Bloom für schwache Smartphones).
+
+
 
 

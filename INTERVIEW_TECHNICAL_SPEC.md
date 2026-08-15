@@ -138,12 +138,21 @@ export type PlayerProfileData = {
         MusicVolume: number,
         SFXVolume: number,
         CameraShake: boolean,
+        LowPerformanceMode: boolean,
     },
     Tutorial: {
         Step1MinedOres: number,        -- 0..3 (3x EarthTopaz abbauen)
         Step1Completed: boolean,
         Step2Completed: boolean,       -- 1x Erz beim Händler verkaufen
         Step3Completed: boolean,       -- 1x Kessel-Rezept craften
+    },
+    DailyStreak: {
+        CurrentStreak: number,         -- 1..7
+        LastClaimTimestamp: number,    -- os.time()
+    },
+    PlaytimeGift: {
+        NextClaimTimestamp: number,    -- os.time() + 600
+        ClaimCount: number,
     },
     Stats: {
         TotalOresMined: number,
@@ -173,12 +182,20 @@ local DEFAULT_PROFILE: PlayerProfileData = {
     UnlockedSummons = { "FirePhoenix" },
     EquippedSummon = "FirePhoenix",
     ActiveBuffs = {},
-    Settings = { MusicVolume = 0.5, SFXVolume = 0.8, CameraShake = true },
+    Settings = { MusicVolume = 0.5, SFXVolume = 0.8, CameraShake = true, LowPerformanceMode = false },
     Tutorial = {
         Step1MinedOres = 0,
         Step1Completed = false,
         Step2Completed = false,
         Step3Completed = false,
+    },
+    DailyStreak = {
+        CurrentStreak = 0,
+        LastClaimTimestamp = 0,
+    },
+    PlaytimeGift = {
+        NextClaimTimestamp = 0,
+        ClaimCount = 0,
     },
     Stats = { TotalOresMined = 0, TotalBossesDefeated = 0, TotalPotionsCrafted = 0, PlaytimeSeconds = 0 },
 }
@@ -662,5 +679,58 @@ $$\text{Angle} = \text{Trauma}^2 \times 0.08 \times \text{math.noise}(0, \text{t
 
 ---
 
-**Ende der Technischen Master-Spezifikation (v3.0 Final & Lückenlos)**  
+## 22. Server Chat-Broadcast Engine (`ChatService` RichText)
+
+### 22.1 Formatierte Social-Proof Events
+- **Broadcast Triggers**:
+  1. *Mythischer Drop (`VoidCrystal`)*:
+     - `Text`: `<font color="#FBBF24"><b>[🌟 AETHER]:</b></font> <font color="#FFFFFF">%s hat einen mythischen </font><font color="#D946EF"><b>Void-Kristall</b></font><font color="#FFFFFF"> geborgen!</font>`
+  2. *Tier 5 Waffencraft (`VoidShadowBlade`)*:
+     - `Text`: `<font color="#FBBF24"><b>[⚔️ ALCHEMIE]:</b></font> <font color="#FFFFFF">%s hat die legendäre </font><font color="#D946EF"><b>Void-Schattenklinge</b></font><font color="#FFFFFF"> geschmiedet!</font>`
+  3. *Boss-Sieg (`CrystalColossus`)*:
+     - `Text`: `<font color="#EF4444"><b>[👑 BOSS]:</b></font> <font color="#FFFFFF">Der mächtige </font><font color="#60A5FA"><b>Kristall-Koloss</b></font><font color="#FFFFFF"> wurde bezwungen!</font>`
+- **Netzwerk-Übertragung**: Ausführung über `TextChatService:DisplaySystemMessage(formattedText)`.
+
+---
+
+## 23. In-World Leaderboard Architektur (`SurfaceGui` Stelen)
+
+### 23.1 Physische Stelen im Startdorf (Zone 1)
+- **Positionen**:
+  - Stele 1 (Top Level): `Vector3.new(25, 6, -15)`
+  - Stele 2 (Meiste Erze): `Vector3.new(35, 6, -15)`
+  - Stele 3 (Boss-Kills): `Vector3.new(45, 6, -15)`
+- **Data-Pipeline (`LeaderboardService`)**:
+  - Nutzt `OrderedDataStore` (`LevelLeaderboard`, `OresLeaderboard`, `BossLeaderboard`).
+  - Cache-Update alle 60 Sekunden.
+  - Generiert dynamische `SurfaceGui`-Einträge mit Spieler-Avatar-Thumbnails (`rbxthumb://type=AvatarHeadShot&id=...`).
+
+---
+
+## 24. Daily Streak- & Playtime-Gift Engine
+
+### 24.1 Daily Login Streak (24h Cooldown / 48h Reset)
+- Beim Join prüft `DataService`:
+  - Ist `os.time() - LastClaimTimestamp` zwischen $20$ und $48$ Stunden $\rightarrow$ `CurrentStreak = math.min(7, CurrentStreak + 1)`.
+  - Ist `os.time() - LastClaimTimestamp > 48` Stunden $\rightarrow$ `CurrentStreak = 1` (Reset).
+  - Ist `< 20` Stunden $\rightarrow$ Bereits heute beansprucht.
+- **Jackpot Tag 7**: 1x `VoidCrystal` + 500 Essenz.
+
+### 24.2 10-Minuten Playtime-Gift (Continuous Session)
+- Client-Timer tickt im HUD. Nach Ablauf von 600 Sekunden leuchtet das Geschenk-Icon auf.
+- Spieler ruft `ClaimPlaytimeGift_RF` auf. Server validiert Session-Dauer und vergibt 40 Essenz + 1x Zufalls-Erz (Zone 1).
+
+---
+
+## 25. Performance- & Mobile-Optimierungs-Architektur
+
+### 25.1 Low-Performance-Modus
+- Wenn `Profile.Settings.LowPerformanceMode == true`:
+  - `ParticleEmitter.Rate` aller visuellen Effekte wird um **60% reduziert**.
+  - `Lighting.BloomEffect.Enabled = false` (spart GPU-Fillrate auf älteren Smartphones).
+  - Mob-Hit-Flash nutzt vereinfachte Transparenz statt teurem Full-Screen-Shader.
+
+---
+
+**Ende der Technischen Master-Spezifikation (v3.1 Final & Production-Ready)**  
 *Dieses Dokument dient als unveränderliche, exakte Richtlinie für alle künftigen Implementierungsschritte.*
