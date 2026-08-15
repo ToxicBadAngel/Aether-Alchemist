@@ -6,7 +6,7 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
 
 ---
 
-## 0. Die 12 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
+## 0. Die 13 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
 
 1. **🧠 IMMER Sequential Thinking nutzen**:
    - Vor **JEDER** Code-Generierung, Architektur-Entscheidung, mathematischen Formel-Berechnung und Fehler-Diagnose **MUSS zwingend** der `sequential-thinking` MCP (`sequentialthinking`) aufgerufen werden!
@@ -58,6 +58,12 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
       2. *Nil-Safety & Transaktions-Härtung*: Alle `nil`-Pfade, ungültige Remotes und Disconnects während laufender Aktionen (Mining/Crafting) sind robust abgefangen.
       3. *Keine zirkulären Abhängigkeiten*: Strikte Schichten-Trennung (`Shared` $\rightarrow$ `Server`/`Client`). Niemals zirkuläre `require()`-Aufrufe.
       4. *Dauerhafte Wartbarkeit (6-Monats-Standard)*: Vollständige `--!strict` Typisierung und klare Kommentare, damit die Codebase auch in 6 Monaten absolut verständlich und modular erweiterbar bleibt.
+
+13. **🛡️ Ganzheitlicher Regression- & Exploit-Sicherheits-Audit (Full-Suite Security & Bug-Fix Law)**:
+    - Bei JEDEM Schritt (vor dem Starten der nächsten Datei) MUSS ein vollständiger Sicherheits- und Regressions-Audit durchgeführt werden:
+      1. *Full Test-Suite Execution*: Nicht nur die neue Datei, sondern ausnahmslos ALLE existierenden Unit-Tests in `tests/` werden komplett mit `Lune` ausgeführt, um Regressionen im gesamten Spiel sofort zu erkennen.
+      2. *Exploit-Sicherheits-Check*: Überprüfung aller Remote-Verträge und Services auf Server-Autorität, Distanzgrenzen ($\le 15$ Studs), Cooldown-Validierung und Race-Condition-Schutz (Mutex).
+      3. *Sofortige Fehler-Behebung*: Wird bei einem Audit der geringste Bug oder eine Sicherheitslücke entdeckt, MUSS diese sofort behoben und durch erneute Testläufe validiert werden, bevor neuer Code begonnen wird.
 
 ---
 
