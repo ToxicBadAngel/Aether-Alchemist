@@ -6,7 +6,7 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
 
 ---
 
-## 0. Die 6 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
+## 0. Die 7 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
 
 1. **🧠 IMMER Sequential Thinking nutzen**:
    - Vor **JEDER** Code-Generierung, Architektur-Entscheidung, mathematischen Formel-Berechnung und Fehler-Diagnose **MUSS zwingend** der `sequential-thinking` MCP (`sequentialthinking`) aufgerufen werden!
@@ -29,6 +29,10 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
 6. **🎯 Ständiger Abgleich mit INTERVIEW.md & INTERVIEW_TECHNICAL_SPEC.md**:
    - Der Agent muss kontinuierlich den aktuellen Code mit [INTERVIEW.md](file:///D:/anana/Pictures/Roblox%20Projects/Mein_Roblox_Projekt/INTERVIEW.md) und [INTERVIEW_TECHNICAL_SPEC.md](file:///D:/anana/Pictures/Roblox%20Projects/Mein_Roblox_Projekt/INTERVIEW_TECHNICAL_SPEC.md) abgleichen.
    - Alle Balancing-Zahlen, Rezept-Kosten, Elementar-Formeln, UI-Vorgaben und Drop-Chancen müssen 100% deckungsgleich sein.
+
+7. **🚀 Automatisches Git Commit & Push (Continuous Versioning)**:
+   - Nach **JEDEM** Coding-Schritt, Feature-Abschluss, Bugfix, Refactoring oder jeder Datei-Änderung MUSS der Agent zwingend die Änderungen committen und auf GitHub pushen (`git add .`, `git commit -m '<Typ>: <Detaillierte Beschreibung der Änderungen>'`, `git push origin main`).
+   - Die Commit-Nachricht MUSS präzise dokumentieren, was hinzugefügt, geändert, refaktoriert oder behoben wurde.
 
 ---
 
