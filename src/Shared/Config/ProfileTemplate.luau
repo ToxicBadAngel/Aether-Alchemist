@@ -63,6 +63,7 @@ local DEFAULT_PROFILE: Types.PlayerProfileData = {
 
     Stats = {
         TotalOresMined = 0,
+        TotalMobsDefeated = 0,
         TotalBossesDefeated = 0,
         TotalPotionsCrafted = 0,
         PlaytimeSeconds = 0,

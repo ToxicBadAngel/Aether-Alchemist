@@ -217,6 +217,7 @@ export type PlayerPlaytimeGift = {
 
 export type PlayerStats = {
     TotalOresMined: number,
+    TotalMobsDefeated: number,
     TotalBossesDefeated: number,
     TotalPotionsCrafted: number,
     PlaytimeSeconds: number,
