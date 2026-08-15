@@ -32,8 +32,7 @@ end
 -- // 3. Alchemist Essenz-Bonus (+3% pro Skill-Punkt, max 10 Punkte = +30%)
 function MathUtils.CalculateEssenceBonus(baseEssence: number, alchemistLevel: number): number
     local clampedLevel = math.clamp(alchemistLevel, 0, 10)
-    local multiplier = 1.0 + (clampedLevel * 0.03)
-    return math.round(baseEssence * multiplier)
+    return math.floor((baseEssence * (100 + clampedLevel * 3) + 50) / 100)
 end
 
 -- // 4. Summoner Cooldown-Reduktion (-3% pro Skill-Punkt, max 10 Punkte = -30%)
