@@ -523,5 +523,59 @@ Jeder Spieler besitzt serverseitig isolierte Token-Buckets für Remotes:
 
 ---
 
-**Ende der Technischen Master-Spezifikation (v2.1 Final)**  
+## 15. 3D-Asset-Pipeline & Geometrie-Metriken (Blender MCP)
+
+### 15.1 Koordinaten-, Skalierungs- & Export-Standards
+- **Skalierungsfaktor**: $1.0\text{ Blender Unit} = 1.0\text{ Roblox Stud}$.
+- **Pivot-Point Standard**:
+  - Alle Erze, Händler-Stände, Kessel und Mobs besitzen den Pivot-Punkt **exakt an der Unterkante auf Bodenhöhe ($Z = 0$ in Blender bzw. $Y = -\text{Height}/2$)**.
+  - Waffen-Klingen besitzen den Pivot **am Griff-Mittelpunkt** (`RightGripAttachment`).
+- **SurfaceAppearance & Material-Channels**:
+  - `ColorMap` (Albedo 1024x1024 Stylized Hand-painted).
+  - `RoughnessMap` (0.2 für Kristalle = spiegelnder Glanz, 0.85 für Fels/Holz).
+  - `MetalnessMap` (0.9 für Alchemie-Kessel Bronze, 0.0 für Kristalle).
+  - `EmissionColor` & `PointLight` (LightEmission = 0.85, LightInfluence = 0.0 für magisches Glühen).
+
+### 15.2 Technische Modell-Tabelle & Poly-Budgets
+| Modell-Asset | Polygon-Budget (Tris) | BoundingBox (Studs $X \times Y \times Z$) | Kollisions-Typ | Lichtquelle (`PointLight`) |
+| :--- | :--- | :--- | :--- | :--- |
+| `Ore_EarthTopaz` | 380 | $4.0 \times 4.5 \times 4.0$ | `Box` | `Color3.fromRGB(245, 158, 11)`, Range 10, Brightness 1.5 |
+| `Ore_FireRuby` | 420 | $4.0 \times 5.0 \times 4.0$ | `Box` | `Color3.fromRGB(239, 68, 68)`, Range 12, Brightness 2.0 |
+| `Ore_OceanSapphire` | 460 | $4.0 \times 5.2 \times 4.0$ | `Box` | `Color3.fromRGB(59, 130, 246)`, Range 12, Brightness 2.0 |
+| `Ore_WindEmerald` | 440 | $4.0 \times 5.5 \times 4.0$ | `Box` | `Color3.fromRGB(16, 185, 129)`, Range 12, Brightness 2.0 |
+| `Ore_LightningAmethyst` | 520 | $4.5 \times 6.0 \times 4.5$ | `Box` | `Color3.fromRGB(168, 85, 247)`, Range 14, Brightness 2.5 |
+| `Ore_VoidCrystal` | 580 | $5.0 \times 6.5 \times 5.0$ | `Box` | `Color3.fromRGB(217, 70, 239)`, Range 16, Brightness 3.0 |
+| `AlchemicalCauldron` | 1.650 | $8.0 \times 7.0 \times 8.0$ | `Hull` | `Color3.fromRGB(56, 189, 248)`, Range 18, Brightness 2.5 |
+| `MerchantStall` | 1.200 | $14.0 \times 9.0 \times 10.0$ | `Hull` | `Color3.fromRGB(251, 191, 36)`, Range 15, Brightness 1.8 |
+| `Mob_EarthSlime` | 420 | $3.5 \times 3.0 \times 3.5$ | `Box` | Kein Light |
+| `Mob_CrystalCrab` | 880 | $5.0 \times 3.5 \times 4.5$ | `Hull` | Kein Light |
+| `Boss_CrystalColossus` | 2.450 | $14.0 \times 22.0 \times 12.0$ | `Hull` | `Color3.fromRGB(239, 68, 68)`, Range 25, Brightness 3.0 |
+
+---
+
+## 16. Terrain-, Beleuchtungs- & Post-Processing-Architektur
+
+### 16.1 Zonen-spezifische Beleuchtungsprofile
+| Zone | ClockTime | Brightness | OutdoorAmbient | Bloom Size / Threshold | Atmosphere Density / Haze |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Zone 1: Elementar-Wiese** | 14.5 | 2.2 | `Color3.fromRGB(110, 125, 140)` | Size 24 / Threshold 0.8 | Density 0.25 / Haze 1.2 |
+| **Zone 2: Kristall-Schlucht** | 17.8 | 1.6 | `Color3.fromRGB(130, 90, 150)` | Size 32 / Threshold 0.6 | Density 0.35 / Haze 2.0 |
+| **Zone 3: Koloss-Gipfel & Arena** | 21.0 | 1.0 | `Color3.fromRGB(40, 35, 70)` | Size 40 / Threshold 0.4 | Density 0.45 / Haze 3.5 |
+
+### 16.2 MapGen & Props-Hierarchie (`Workspace.MapGen`)
+```text
+Workspace/
+├── Map/
+│   ├── TerrainBases/        -- Boden-Plattformen mit Grass/Sandstone/Obsidian Materials
+│   ├── Altars/              -- Alchemie-Kessel Altar mit ProximityPrompts & Runensäulen
+│   ├── Shops/               -- Händler-Stände & NPC-Parts
+│   ├── OreNodes/            -- Spawnpunkte der Erzadern (mit NodeId & OreType Attributen)
+│   ├── MobSpawns/           -- Spawnpunkte mit MobId & LeashRadius Attributen
+│   ├── Barriers/            -- Magische Zonenbarrieren mit RequiredLevel Attribut
+│   └── Vegetation/          -- Low-Poly Kiefern, Eichen, Leuchtpilze & Felsen
+```
+
+---
+
+**Ende der Technischen Master-Spezifikation (v2.2 Final)**  
 *Dieses Dokument dient als exakte Richtlinie für alle künftigen Implementierungsschritte.*

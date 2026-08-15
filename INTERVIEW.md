@@ -231,4 +231,52 @@ Das Wesen schwebt neben der Schulter des Spielers und wird per Taste `E` / Mobil
 - **Graceful Server Shutdown**:
   - `game:BindToClose` sichert alle offenen Profile innerhalb von 25 Sekunden transaktional ab.
 
+---
+
+## 📌 15. 3D-Asset Art Bible & Modellierungs-Katalog (Blender Specs)
+- **Artstyle**: **Stylized Low-Poly / Anime-Ghibli** (sanft geschrägte Kanten, bunte leuchtende Facetten, handbemalter Look, extrem performant für 60 FPS Mobile).
+- **Poly-Budgets & Geometrie**:
+  1. **Erzkristall-Adern** (300–600 Polygone pro Ader):
+     - `Erd-Topas`: Warme, bernsteinfarbene Kristallcluster eingebettet in verwitterten Fels.
+     - `Feuer-Rubin`: Scharfkantige, rubinrote Spitzen mit glühendem Innenkern.
+     - `Ozean-Saphir`: Tiefblaue, tropfenförmig angeordnete Prismen.
+     - `Wind-Smaragd`: Spiralförmig gewundene, mintgrüne Kristallklingen.
+     - `Blitz-Amethyst`: Gezackte, violette Kristall-Blitze mit pulsierendem Neon-Schimmer.
+     - `Void-Kristall`: Schwebende, tiefschwarze Kristallscherben mit magischem Magenta-Glow.
+  2. **Alchemie-Kessel Altar** (1.200–2.000 Polygone):
+     - Antiker Bronzekessel mit gravierten Runen, 3 Drachenkrallen-Füßen und brodelnder Magieflüssigkeit im Kesselinneren.
+  3. **Alchemie-Händler Marktstand** (800–1.500 Polygone):
+     - Rustikales Holzgestell, blau-gold gestreiftes Stoff-Baldachin, Trank-Regale und leuchtende Messing-Laterne.
+  4. **Monster & Bosse**:
+     - *Erd-Schleim* (400 Polygone): Halbdurchsichtiger grüner Geleekörper mit einem schwebenden Topas-Kern im Zentrum.
+     - *Kristall-Krabbe* (900 Polygone): Facettierter Kristallpanzer mit 2 asymmetrischen Kristall-Scheren.
+     - *Kristall-Koloss Boss* (2.500 Polygone): Uralter Riese aus schwebenden Felsplatten, Runenschultern und glühendem Kristall-Herzkern.
+  5. **Waffen-Klingen (T1–T5)**:
+     - `Anfänger-Klinge`: Schlichtes eisernes Kurzschwert mit Ledergriff.
+     - `Feuer-Säbel`: Krummsäbel aus gehärtetem Rubin mit Flammengravur.
+     - `Ozean-Dreizack`: Wellenförmig geschwungene Saphir-Dreizackspitze.
+     - `Sturm-Schneide`: Zweihändiges Großschwert aus Amethyst mit Blitz-Runen.
+     - `Void-Schattenklinge`: Asymmetrische Katana-Klinge aus Void-Glas mit Schattenrauch.
+  6. **Elementar-Begleiter (Summons)**:
+     - `Feuer-Phönix`: Kleiner, niedlicher Vogel aus stilisierten Feuerfedern.
+     - `Eis-Golem`: Kompakter, schwebender Eisblock mit leuchtenden Augen.
+     - `Void-Phantom`: Schwebende, geisterhafte Alchemisten-Maske mit Magier-Kapuze.
+
+---
+
+## 📌 16. Terrain-, Biome- & Umgebungs-Spezifikation (Vegetation, Props, Licht)
+- **Zone 1 (Elementar-Wiese)**:
+  - *Farbe & Boden*: Frisches Smaragdgras `Color3.fromRGB(74, 163, 66)` mit sanften Höhenstufen.
+  - *Vegetation & Props*: Stylized Low-Poly Kiefern & Eichen, blaue Leuchtpilze, Holzzäune, Pflasterstein-Pfade, Altar-Marmorsäulen.
+  - *Lichtstimmung*: Sonnige Nachmittagswiese (`ClockTime = 14.5`, `Brightness = 2.2`, sanfte SunRays, warme Farbkorrektur).
+- **Zone 2 (Kristall-Schlucht)**:
+  - *Farbe & Boden*: Purpur-violetter Sandstein `Color3.fromRGB(130, 75, 110)` mit schwebenden Felsbrücken.
+  - *Vegetation & Props*: Aufragende Kristall-Stalagmiten, leuchtende Wind-Anemonen, uralte Runensteine.
+  - *Lichtstimmung*: Mystische Kristall-Dämmerung (`ClockTime = 17.8`, violetter Horizont, intensiverer Bloom für Kristalle).
+- **Zone 3 (Koloss-Gipfel & Boss-Arena)**:
+  - *Farbe & Boden*: Dunkles Obsidian-Gestein `Color3.fromRGB(24, 20, 36)` mit rissigen Magma-/Void-Adern.
+  - *Vegetation & Props*: Schwebende Monolithen, Meteoriten-Krater, monumentales Boss-Portal.
+  - *Lichtstimmung*: Dunkle Mondnacht mit Aether-Nebel (`ClockTime = 21.0`, dichter Atmosphären-Haze, magischer Glow).
+
+
 
