@@ -133,15 +133,16 @@ export type MobConfig = {
 
 -- // 6. Zonen & Welt
 export type ZoneId = number
+export type Vector3Data = { X: number, Y: number, Z: number }
 
 export type ZoneConfig = {
     Id: ZoneId,
     Name: string,
     LevelMin: number,
     LevelMax: number,
-    CenterPosition: Vector3,
-    Dimensions: Vector3,
-    BarrierPosition: Vector3?,
+    CenterPosition: Vector3Data,
+    Dimensions: Vector3Data,
+    BarrierPosition: Vector3Data?,
     ClockTime: number,
     Brightness: number,
     BGMId: string,
