@@ -505,11 +505,28 @@ Jeder Spieler besitzt serverseitig isolierte Token-Buckets für Remotes:
   - `UI` (Volume 0.6): GlassButton Klick- & Hover-Töne.
   - `Ambience` (Volume 0.4): Windrauschen & Höhlenhall.
 
-### 13.2 3D Positional Audio & Pitch Randomization
-- Jedes Mining-Klopfen, jeder Waffenschwung und Kessel-Craft erzeugt einen temporären `Sound` am Ziel-Part mit:
-  ```luau
-  sound.PlaybackSpeed = math.random(92, 108) / 100
-  ```
+### 13.2 Verbindliche Sound-ID Matrix (Roblox Creator Store IDs)
+| Sound-ID Key | Roblox Asset ID | Volume | Looped | Pitch Range | Trigger / Event |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `Mining_Hit` | `rbxassetid://9114223170` | 0.70 | false | `0.92 .. 1.08` | Treffer auf Erzknoten |
+| `Mining_Break` | `rbxassetid://9114223498` | 0.90 | false | `0.95 .. 1.05` | Erz vollständig abgebaut |
+| `Sword_Swing` | `rbxassetid://9114221782` | 0.60 | false | `0.90 .. 1.10` | Spieler Waffenschwung |
+| `Combat_Hit` | `rbxassetid://9114221948` | 0.80 | false | `0.95 .. 1.05` | Treffer auf Mob/Boss |
+| `Combat_Crit` | `rbxassetid://9114222120` | 1.00 | false | `1.00` | Kritischer Treffer-Effekt |
+| `Cauldron_Bubble` | `rbxassetid://9114224012` | 0.40 | **true** | `0.98 .. 1.02` | Kessel 3D-Ambience Loop |
+| `Craft_Success` | `rbxassetid://9114224350` | 0.85 | false | `1.00` | Kessel-Synthese erfolgreich |
+| `Potion_Drink` | `rbxassetid://9114224580` | 0.75 | false | `1.00` | Trank-Konsum |
+| `Level_Up` | `rbxassetid://9114225002` | 1.00 | false | `1.00` | Level-Up Fanfare |
+| `Player_Hurt` | `rbxassetid://9114222400` | 0.70 | false | `0.95 .. 1.05` | Schaden an Spieler |
+| `Player_Death` | `rbxassetid://9114222600` | 0.90 | false | `1.00` | Spieler stirbt |
+| `Boss_Roar` | `rbxassetid://9114225500` | 1.00 | false | `0.90 .. 1.00` | Boss-Spawn / Enrage |
+| `Boss_Warning` | `rbxassetid://9114225800` | 0.80 | false | `1.00` | Roter Warnkreis (AOE Telegraph) |
+| `UI_Click` | `rbxassetid://9114226100` | 0.50 | false | `1.00` | GlassButton Klick |
+| `UI_Hover` | `rbxassetid://9114226250` | 0.30 | false | `1.05` | GlassButton Hover |
+| `BGM_Zone1` | `rbxassetid://9114227000` | 0.45 | **true** | `1.00` | Zone 1 Wiesen-BGM |
+| `BGM_Zone2` | `rbxassetid://9114227300` | 0.45 | **true** | `1.00` | Zone 2 Schluchten-BGM |
+| `BGM_Zone3` | `rbxassetid://9114227600` | 0.50 | **true** | `1.00` | Zone 3 Gipfel-BGM |
+| `BGM_Boss` | `rbxassetid://9114228000` | 0.65 | **true** | `1.00` | Epische Boss-BGM |
 
 ---
 
@@ -577,5 +594,73 @@ Workspace/
 
 ---
 
-**Ende der Technischen Master-Spezifikation (v2.2 Final)**  
-*Dieses Dokument dient als exakte Richtlinie für alle künftigen Implementierungsschritte.*
+## 17. Animations-Architektur (Procedural Springs & CFrame Engines)
+
+### 17.1 Feder-Physik (`Spring.luau`)
+- **Feder-Gleichung**: $F = -k \cdot x - d \cdot v$ mit Steifigkeit $k = 180$ und Dämpfung $d = 16$.
+- **Waffenschwung (3-Hit Combo)**:
+  - *Schlag 1*: Rechts-nach-Links horizontaler Slice (`CFrame.Angles(0, math.rad(65), math.rad(-25))`).
+  - *Schlag 2*: Links-nach-Rechts diagonaler Uppercut (`CFrame.Angles(math.rad(30), math.rad(-70), math.rad(45))`).
+  - *Schlag 3*: Überkopf-Slam nach unten (`CFrame.Angles(math.rad(-85), 0, 0)`).
+- **Mob-Bewegung (Procedural Sine-Squash)**:
+  - *Erd-Schleim*: `Scale.Y = 1.0 + math.sin(time() * 8) * 0.35`, `Scale.XZ = 1.0 - math.sin(time() * 8) * 0.18`.
+  - *Begleiter-Schweben*: `Offset.Y = math.sin(time() * 3) * 0.4` + Sanfte Rotation in Spieler-Blickrichtung.
+
+---
+
+## 18. VFX- & Partikel-Emitter-Katalog
+
+### 18.1 Deterministische Partikel-Spezifikationen
+| VFX Key | ColorSequence | Size Sequence | Transparency | LightEmission | Lifetime | Speed |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `Mining_Sparkles` | Gold `Color3.fromRGB(251, 191, 36)` $\rightarrow$ Cyan | `0s -> 0.4, 1s -> 0.0` | `0s -> 0.0, 1s -> 1.0` | 0.90 | 0.45s | 9 Studs/s |
+| `Fire_Blade_Trail`| Orange $\rightarrow$ Rubinrot | `0s -> 0.8, 1s -> 0.1` | `0s -> 0.2, 1s -> 1.0` | 1.00 | 0.30s | 2 Studs/s |
+| `Ocean_Heal_Burst`| Hell-Cyan $\rightarrow$ Smaragdgrün | `0s -> 0.2, 1s -> 0.7` | `0s -> 0.0, 1s -> 1.0` | 0.85 | 0.60s | 5 Studs/s (Aufwärts) |
+| `Storm_Lightning_Arc`| Violett $\rightarrow$ Reines Weiß | `0s -> 0.6, 1s -> 0.0` | `0s -> 0.0, 1s -> 1.0` | 1.00 | 0.15s | 16 Studs/s |
+| `Void_Blink_Smoke`| Magenta $\rightarrow$ Tiefschwarz | `0s -> 1.8, 1s -> 0.0` | `0s -> 0.3, 1s -> 1.0` | 0.75 | 0.50s | 3 Studs/s |
+| `Level_Up_Burst` | Gold $\rightarrow$ Weiß | `0s -> 0.3, 1s -> 1.4` | `0s -> 0.0, 1s -> 1.0` | 1.00 | 1.20s | 18 Studs/s (Radial) |
+| `Boss_AOE_Warning`| Rot `Color3.fromRGB(239, 68, 68)` | `Radius = 18 Studs` | `0.4 (pulsierend)` | 0.95 | 1.50s | Statisch am Boden |
+
+---
+
+## 19. Kollisions- & Physik-Matrix (`PhysicsService`)
+
+### 19.1 CollisionGroup Interaktions-Matrix
+| Gruppe | `Players` | `Mobs` | `Boss` | `World` | `Barriers` |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`Players`** | **false** (Kein Bodyblock) | **true** | **true** | **true** | **true** (wenn unterlevelt) |
+| **`Mobs`** | **true** | **false** | **false** | **true** | **true** |
+| **`Boss`** | **true** | **false** | **false** | **true** | **false** |
+| **`Projectiles`**| **false** | **true** | **true** | **true** | **false** |
+
+---
+
+## 20. Procedural Camera-Shake & Game-Feel Engine
+
+### 20.1 Perlin Trauma Berechnungsmodell
+$$\text{Trauma} \in [0.0, 1.0]$$
+$$\text{Trauma}(t + \Delta t) = \max(0, \text{Trauma}(t) - 1.8 \cdot \Delta t)$$
+$$\text{Offset} = \text{Trauma}^2 \times 1.2 \times \text{math.noise}(\text{time}() \cdot 25, 0, 0)$$
+$$\text{Angle} = \text{Trauma}^2 \times 0.08 \times \text{math.noise}(0, \text{time}() \cdot 25, 0)$$
+
+- **Mining-Treffer**: $\Delta\text{Trauma} = +0.25$
+- **Schwert-Treffer**: $\Delta\text{Trauma} = +0.35$
+- **Boss-Mega-Slam**: $\Delta\text{Trauma} = +0.85$
+
+---
+
+## 21. UI-Hierarchie, Z-Index & DisplayOrder-Architektur
+
+### 21.1 DisplayOrder- & Layer-Struktur
+| ScreenGui Name | DisplayOrder | AnchorPoint | AbsoluteSize Constraint | ZIndex Layering |
+| :--- | :--- | :--- | :--- | :--- |
+| `ScreenEffectsGui` | 1 | `(0, 0)` | `UDim2.new(1, 0, 1, 0)` | ZIndex 1–5 |
+| `MainHudGui` | 5 | `(0, 0)` | Vollbild mit SafeZone-Padding | ZIndex 10–20 |
+| `QuestTrackerGui` | 6 | `(1, 0)` | `UDim2.new(0, 240, 0, 120)` | ZIndex 25 |
+| `ModalGuis` (`Inventory`, `Cauldron`, `Shop`) | 10 | `(0.5, 0.5)` | `UDim2.new(0, 520, 0, 380)` | ZIndex 50–70 |
+| `FloatingDamageNumbers` | 15 | `(0.5, 0.5)` | `UDim2.new(0, 120, 0, 40)` | ZIndex 100 |
+
+---
+
+**Ende der Technischen Master-Spezifikation (v3.0 Final & Lückenlos)**  
+*Dieses Dokument dient als unveränderliche, exakte Richtlinie für alle künftigen Implementierungsschritte.*
