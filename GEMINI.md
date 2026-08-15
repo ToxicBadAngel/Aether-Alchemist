@@ -6,7 +6,7 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
 
 ---
 
-## 0. Die 11 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
+## 0. Die 12 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
 
 1. **🧠 IMMER Sequential Thinking nutzen**:
    - Vor **JEDER** Code-Generierung, Architektur-Entscheidung, mathematischen Formel-Berechnung und Fehler-Diagnose **MUSS zwingend** der `sequential-thinking` MCP (`sequentialthinking`) aufgerufen werden!
@@ -51,6 +51,13 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
 11. **✨ Anti-Slop & Game-Feel Standard (Juiciness Guarantee)**:
     - Keine generischen, leblosen UIs oder Default-Parts.
     - Strikter Einsatz von 4-Layer Glassmorphism (`UIStroke`, `UIGradient`, `UICorner`), haptischen Micro-Animations (1.04x Hover, 0.95x Click), 3D Positional Audio mit Pitch-Randomisierung (92%..108%), Floating Damage Numbers, Mob Hit-Flashes und Perlin Trauma Camera-Shake.
+
+12. **🧹 Post-Implementation Self-Audit & 6-Monats-Clean-Code-Garantie (Zero-Technical-Debt Law)**:
+    - Nach JEDEM Schreiben und Testen einer Datei MUSS der Agent einen kritischen 4-Punkte-Audit durchführen, bevor er dem Nutzer Bericht erstattet:
+      1. *Single Responsibility & Modularität*: Jede Datei erfüllt genau eine Aufgabe. Keine monolithischen Monster-Skripte (> 300 Zeilen werden zerlegt).
+      2. *Nil-Safety & Transaktions-Härtung*: Alle `nil`-Pfade, ungültige Remotes und Disconnects während laufender Aktionen (Mining/Crafting) sind robust abgefangen.
+      3. *Keine zirkulären Abhängigkeiten*: Strikte Schichten-Trennung (`Shared` $\rightarrow$ `Server`/`Client`). Niemals zirkuläre `require()`-Aufrufe.
+      4. *Dauerhafte Wartbarkeit (6-Monats-Standard)*: Vollständige `--!strict` Typisierung und klare Kommentare, damit die Codebase auch in 6 Monaten absolut verständlich und modular erweiterbar bleibt.
 
 ---
 
