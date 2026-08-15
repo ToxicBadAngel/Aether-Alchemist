@@ -1,0 +1,19 @@
+﻿# Binaries
+*.exe
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Roblox lock files
+*.rbxlx.lock
+*.rbxl.lock
+
+# Logs & Temporary files
+*.tmp
+*.log
+
+# Knowledge Graph output
+graphify-out/

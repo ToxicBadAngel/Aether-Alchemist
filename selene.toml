@@ -1,0 +1,9 @@
+std = "roblox"
+
+exclude = ["Packages/**", "ServerPackages/**"]
+
+[rules]
+empty_if = "warn"
+multiple_statements = "warn"
+unused_variable = "warn"
+shadowing = "warn"
