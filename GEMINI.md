@@ -6,7 +6,7 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
 
 ---
 
-## 0. Die 7 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
+## 0. Die 8 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
 
 1. **🧠 IMMER Sequential Thinking nutzen**:
    - Vor **JEDER** Code-Generierung, Architektur-Entscheidung, mathematischen Formel-Berechnung und Fehler-Diagnose **MUSS zwingend** der `sequential-thinking` MCP (`sequentialthinking`) aufgerufen werden!
@@ -19,8 +19,8 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
    - Um Context-Tokens zu sparen und den Gesamtüberblick über die Codebase zu behalten, muss der Agent den Code via `graphify` (`graphify query`, `graphify path`, `graphify explain`) auditieren und navigieren.
    - Nach **JEDER** Code-Änderung in `src/` MUSS zwingend `python -m graphify update .` ausgeführt werden.
 
-4. **🧪 Test-Driven Feature Verification (In-Game Auto-QA)**:
-   - Nach **JEDEM** implementierten Feature MUSS das Spiel getestet werden (über den automatisierten `AutoQAController`, Test-Skripte oder interaktive Verifikation).
+4. **🧪 Test-Driven Feature Verification (In-Game Auto-QA & Lune)**:
+   - Vor und nach **JEDEM** implementierten Feature MUSS der Code über `lune` Unit-Tests und In-Game Auto-QA validiert werden.
    - Kein Feature gilt als abgeschlossen, bevor es nicht erfolgreich validiert wurde.
 
 5. **🔁 Kontinuierliche Selbstverbesserung (Closed-Loop Learning)**:
@@ -33,6 +33,11 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
 7. **🚀 Automatisches Git Commit & Push (Continuous Versioning)**:
    - Nach **JEDEM** Coding-Schritt, Feature-Abschluss, Bugfix, Refactoring oder jeder Datei-Änderung MUSS der Agent zwingend die Änderungen committen und auf GitHub pushen (`git add .`, `git commit -m '<Typ>: <Detaillierte Beschreibung der Änderungen>'`, `git push origin main`).
    - Die Commit-Nachricht MUSS präzise dokumentieren, was hinzugefügt, geändert, refaktoriert oder behoben wurde.
+
+8. **🎯 Minimal Blast Radius & Lose Entkopplung (Anti-Bricking Schutzschild)**:
+   - Code-Änderungen und Bugfixes MÜSSEN chirurgisch präzise auf das explizit betroffene Modul beschränkt bleiben.
+   - Es ist dem Agenten strengstens untersagt, ungefragt Nachbarsysteme oder unrelated Files umzuschreiben.
+   - Alle Services und Features müssen lose über `Signal` (Event-Driven) und isolierte State Machines gekapselt sein, damit Änderungen an einem System (z.B. Boss-Verhalten) niemals andere Spielbereiche (z.B. Inventar/Mining) beeinträchtigen können.
 
 ---
 
