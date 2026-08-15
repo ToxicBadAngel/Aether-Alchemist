@@ -6,7 +6,7 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
 
 ---
 
-## 0. Die 8 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
+## 0. Die 11 Goldenen Gesetze des Agenten (MANDATORY AGENT LAWS)
 
 1. **🧠 IMMER Sequential Thinking nutzen**:
    - Vor **JEDER** Code-Generierung, Architektur-Entscheidung, mathematischen Formel-Berechnung und Fehler-Diagnose **MUSS zwingend** der `sequential-thinking` MCP (`sequentialthinking`) aufgerufen werden!
@@ -38,6 +38,19 @@ Lies dieses Dokument vollständig vor jeder Aktion. Alle Regeln, Architektur-Mus
    - Code-Änderungen und Bugfixes MÜSSEN chirurgisch präzise auf das explizit betroffene Modul beschränkt bleiben.
    - Es ist dem Agenten strengstens untersagt, ungefragt Nachbarsysteme oder unrelated Files umzuschreiben.
    - Alle Services und Features müssen lose über `Signal` (Event-Driven) und isolierte State Machines gekapselt sein, damit Änderungen an einem System (z.B. Boss-Verhalten) niemals andere Spielbereiche (z.B. Inventar/Mining) beeinträchtigen können.
+
+9. **🔬 Atomares Einzeldatei-Protokoll (Single-File Execution Law)**:
+   - Jede Luau-Datei wird **einzeln und isoliert** geschrieben.
+   - Nach jeder Datei MUSS sofort der `lune`-Test und `selene`-Lint ausgeführt werden.
+   - Erst nach erfolgreicher Verifikation und Freigabe durch den Nutzer wird mit der nächsten Datei fortgefahren.
+
+10. **🌱 MVP-First & Iteratives Polishing (Lean Core Loop Foundation)**:
+    - Der Fokus liegt ausnahmslos zuerst auf dem funktionierenden, bugfreien **Zone-1 MVP Core Loop** (Erze abbauen $\rightarrow$ Kessel craften $\rightarrow$ Händler verkaufen $\rightarrow$ Data-Saving $\rightarrow$ Responsive UI).
+    - Erst wenn dieser Kern 100% spielbar, performant und vom Nutzer freigegeben ist, werden Zonen 2/3, Boss-Mechaniken und Trading skaliert.
+
+11. **✨ Anti-Slop & Game-Feel Standard (Juiciness Guarantee)**:
+    - Keine generischen, leblosen UIs oder Default-Parts.
+    - Strikter Einsatz von 4-Layer Glassmorphism (`UIStroke`, `UIGradient`, `UICorner`), haptischen Micro-Animations (1.04x Hover, 0.95x Click), 3D Positional Audio mit Pitch-Randomisierung (92%..108%), Floating Damage Numbers, Mob Hit-Flashes und Perlin Trauma Camera-Shake.
 
 ---
 
