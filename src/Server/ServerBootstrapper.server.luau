@@ -3,12 +3,15 @@
     ServerBootstrapper.server.luau
     Aether Alchemist (Element Shapers)
     Haupteinstiegspunkt für den Server (ServerScriptService.Server).
-    Initialisiert Netzwerk-Remotes und orchestriert den strikten 2-Phasen-Lifecycle
-    (Init -> Start) aller 8 Server-Services.
+    Initialisiert Welt-Generierung (Zone 1 Blockout), Beleuchtung, Netzwerk-Remotes
+    und orchestriert den strikten 2-Phasen-Lifecycle (Init -> Start) aller 8 Server-Services.
     Entspricht 100% INTERVIEW_TECHNICAL_SPEC.md (v3.1).
 ]]
 
 local NetworkContracts = require("../Shared/Remotes/NetworkContracts")
+local LightingSetup = require("../Lighting/LightingSetup")
+local BuildZone1 = require("../Workspace/MapGen/BuildZone1")
+
 local DataService = require("./Services/DataService")
 local InventoryService = require("./Services/InventoryService")
 local HarvestService = require("./Services/HarvestService")
@@ -32,24 +35,28 @@ local SERVICES = {
 local ServerBootstrapper = {}
 
 function ServerBootstrapper.Bootstrap()
-    -- Phase 0: Netzwerk-Remotes registrieren
+    -- Phase 0: Welt-Generierung & Lighting Setup
+    LightingSetup.Apply()
+    BuildZone1.Build()
+
+    -- Phase 1: Netzwerk-Remotes registrieren
     NetworkContracts.InitServer()
 
-    -- Phase 1: Services Initialisierung (Init)
+    -- Phase 2: Services Initialisierung (Init)
     for _, entry in SERVICES do
         if typeof(entry.Service.Init) == "function" then
             entry.Service:Init()
         end
     end
 
-    -- Phase 2: Services Starten (Start)
+    -- Phase 3: Services Starten (Start)
     for _, entry in SERVICES do
         if typeof(entry.Service.Start) == "function" then
             entry.Service:Start()
         end
     end
 
-    print("🛡️ [Aether Alchemist Server] Alle 8 Server-Services erfolgreich initialisiert & gestartet!")
+    print("🛡️ [Aether Alchemist Server] Welt generiert & alle 8 Server-Services erfolgreich gestartet!")
     return true
 end
 
