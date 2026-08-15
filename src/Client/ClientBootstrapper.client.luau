@@ -14,6 +14,7 @@ local MiningController = require("./Controllers/MiningController")
 local CombatController = require("./Controllers/CombatController")
 local CameraController = require("./Controllers/CameraController")
 local UIController = require("./Controllers/UIController")
+local AutoQAController = require("./Controllers/AutoQAController")
 
 local CONTROLLERS = {
     { Name = "DataController", Controller = DataController },
@@ -22,6 +23,7 @@ local CONTROLLERS = {
     { Name = "CombatController", Controller = CombatController },
     { Name = "CameraController", Controller = CameraController },
     { Name = "UIController", Controller = UIController },
+    { Name = "AutoQAController", Controller = AutoQAController },
 }
 
 local ClientBootstrapper = {}
@@ -41,7 +43,7 @@ function ClientBootstrapper.Bootstrap()
         end
     end
 
-    print("✨ [Aether Alchemist Client] Alle 6 Client-Controller erfolgreich initialisiert & gestartet!")
+    print("✨ [Aether Alchemist Client] Alle 7 Client-Controller erfolgreich initialisiert & gestartet!")
     return true
 end
 
