@@ -139,6 +139,12 @@ export type PlayerProfileData = {
         SFXVolume: number,
         CameraShake: boolean,
     },
+    Tutorial: {
+        Step1MinedOres: number,        -- 0..3 (3x EarthTopaz abbauen)
+        Step1Completed: boolean,
+        Step2Completed: boolean,       -- 1x Erz beim Händler verkaufen
+        Step3Completed: boolean,       -- 1x Kessel-Rezept craften
+    },
     Stats: {
         TotalOresMined: number,
         TotalBossesDefeated: number,
@@ -168,6 +174,12 @@ local DEFAULT_PROFILE: PlayerProfileData = {
     EquippedSummon = "FirePhoenix",
     ActiveBuffs = {},
     Settings = { MusicVolume = 0.5, SFXVolume = 0.8, CameraShake = true },
+    Tutorial = {
+        Step1MinedOres = 0,
+        Step1Completed = false,
+        Step2Completed = false,
+        Step3Completed = false,
+    },
     Stats = { TotalOresMined = 0, TotalBossesDefeated = 0, TotalPotionsCrafted = 0, PlaytimeSeconds = 0 },
 }
 ```
@@ -454,12 +466,62 @@ Keine statischen Binär-Guis! Jedes UI-Fenster wird deterministisch über Kompon
 ## 12. Fehlerbehandlung, Session-Recovery & Anti-Exploit-Regeln
 
 ### 12.1 Server-Autorität & Exploit-Schutz
-1. **Kein Client-seitiger Schaden**: Der Client sendet niemals Schadenswerte. Er sendet nur den Angriffstrigger; der Server ermittelt Treffer, Rüstung, Buffs und Schadenshöhe.
-2. **Speedhack- & Teleport-Guard**: Positionen bei Interaktionen (Mining, Crafting, Shop) werden serverseitig per Distanzcheck gegen die tatsächliche Serverposition validiert.
+1. **Kein Client-seitiger Schaden**: Der Client sendet niemals Schadenswerte. Er sendet nur den Angriffstrigger (`AttackSwing_RE`); der Server ermittelt Treffer, Rüstung, Buffs und Schadenshöhe.
+2. **Speedhack- & Teleport-Guard**: Positionen bei Interaktionen (Mining, Crafting, Shop) werden serverseitig per Distanzcheck gegen die tatsächliche Serverposition validiert. Maximale ungehinderte Bewegungsgeschwindigkeit: $\le 45$ Studs/s.
 3. **Session-Locking**: Verhindert Daten-Duplikation bei schnellem Serverwechsel oder Reconnects über ProfileService.
-4. **Auto-Save**: Transaktionale Sicherung alle 30 Sekunden sowie bei `PlayerRemoving` und `BindToClose`.
+4. **Auto-Save**: Transaktionale Sicherung alle 30 Sekunden sowie bei `PlayerRemoving` und `BindToClose` (mit 25s Timeout).
+
+### 12.2 Netzwerk-Rate-Limiting (Token-Bucket-Algorithmus)
+Jeder Spieler besitzt serverseitig isolierte Token-Buckets für Remotes:
+- `AttackSwing_RE`: Max. 12 Tokens / Sekunde (Refill: 12/s).
+- `HarvestOre_RF`: Max. 2 Tokens / Sekunde (Refill: 2/s).
+- `CraftRecipe_RF` / `SellItems_RF`: Max. 5 Tokens / Sekunde (Refill: 5/s).
+- *Überlauf-Verhalten*: Eingehende Pakete oberhalb des Limits werden stillschweigend verworfen (Anti-Lag-Schutz).
+
+### 12.3 Payload-Sanitization & Typ-Wächter
+- Alle an `RF` übergebenen Zahlen müssen die Bedingung erfüllen:
+  ```luau
+  local function isValidPositiveInt(n: any): boolean
+      return typeof(n) == "number" and n == math.floor(n) and n > 0 and n <= 100_000 and n ~= math.huge
+  end
+  ```
+- Item-IDs werden strikt gegen die Schlüsseltabellen in `OresConfig`, `WeaponsConfig` und `RecipesConfig` validiert (`Config[id] ~= nil`).
+
+### 12.4 Spieler-Tod & Respawn-Sicherheit
+- Bei `Humanoid.Died`:
+  - 0 Items/Essenz verloren.
+  - Aktive Buffs in `ActiveBuffs` bleiben unverändert gespeichert.
+  - Nach 3.0s Respawn am Startplatz in Zone 1 `Vector3.new(0, 5, 0)` mit 100 HP.
+  - Befand sich der Spieler in der Boss-Arena, wird er aus der Teilnehmerliste des Bosses ausgetragen und am Arenarand platziert.
 
 ---
 
-**Ende der Technischen Master-Spezifikation (v2.0)**  
+## 13. Audio-, SFX- & Musik-Architektur
+
+### 13.1 SoundGroups in `SoundService`
+- `Master`
+  - `BGM` (Volume 0.5): Zonenmusik mit Crossfade (1.5s Tween bei Zonenwechsel).
+  - `SFX` (Volume 0.8): 3D-Kollisions-, Mining- & Kampfsounds.
+  - `UI` (Volume 0.6): GlassButton Klick- & Hover-Töne.
+  - `Ambience` (Volume 0.4): Windrauschen & Höhlenhall.
+
+### 13.2 3D Positional Audio & Pitch Randomization
+- Jedes Mining-Klopfen, jeder Waffenschwung und Kessel-Craft erzeugt einen temporären `Sound` am Ziel-Part mit:
+  ```luau
+  sound.PlaybackSpeed = math.random(92, 108) / 100
+  ```
+
+---
+
+## 14. First-Time User Experience (FTUE / Starter-Quest Engine)
+
+### 14.1 Starter-Quest Progression
+- **Quest 1 (`Step1`)**: Baue 3x `EarthTopaz` ab. Bei jedem erfolgreichen Mining `Step1MinedOres += 1`. Bei Erreichen von 3: `Step1Completed = true` und +50 Aether-Essenz.
+- **Quest 2 (`Step2`)**: Verkaufe 1x beliebiges Erz beim Alchemie-Händler NPC. Bei Transaktion: `Step2Completed = true` und +50 Aether-Essenz.
+- **Quest 3 (`Step3`)**: Crafte 1x beliebiges Kessel-Rezept am Alchemie-Podest. Bei Erfolg: `Step3Completed = true` und +50 Aether-Essenz.
+- Nach Abschluss aller 3 Quests wird das Tutorial-Panel automatisch ausgeblendet.
+
+---
+
+**Ende der Technischen Master-Spezifikation (v2.1 Final)**  
 *Dieses Dokument dient als exakte Richtlinie für alle künftigen Implementierungsschritte.*

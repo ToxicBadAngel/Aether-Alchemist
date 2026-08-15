@@ -184,3 +184,51 @@ Das Wesen schwebt neben der Schulter des Spielers und wird per Taste `E` / Mobil
 - **Trading-Abbruch**: Bei Trennung während eines Trades wird der Handel storniert und Items werden sicher zurückerstattet.
 - **Boss-Disconnect**: Spieler wird ohne Verlust von Items/Essenz aus der Warteschlange/Kampf entfernt.
 
+---
+
+## 📌 11. Spieler-Tod & Respawn-System
+- **Kein Item- oder Essenz-Verlust**: Spieler behalten alle gesammelten Erze, Tränke, Waffen und Währung.
+- **Buff-Erhalt**: Laufende temporäre Trank-Buffs bleiben beim Tod voll aktiv.
+- **Respawn**: Nach 3 Sekunden automatischer Respawn am Dorfplatz (Zone 1 Spawn) mit 100% HP.
+- **Boss-Arenen-Schutz**: Stirbt ein Spieler in der Boss-Arena, spawnt er am sicheren Arenarand außerhalb der Gefahrenzone.
+
+---
+
+## 📌 12. First-Time User Experience (FTUE / Starter-Quests)
+- **3-Stufige Starter-Questreihe**:
+  1. **Schritt 1: Erster Ertrag** – Baue 3x `Erd-Topas` ab. *(Belohnung: 50 Aether-Essenz)*
+  2. **Schritt 2: Handelsbeziehung** – Verkaufe 1x beliebiges Erz beim Alchemie-Händler. *(Belohnung: 50 Aether-Essenz)*
+  3. **Schritt 3: Erste Alchemie** – Crafte 1x beliebiges Rezept am Kessel-Altar. *(Belohnung: 50 Aether-Essenz)*
+- **UI-Anzeige**: Elegantes Mini-Glassmorphism-Panel am oberen rechten Bildschirmrand mit Live-Fortschritt.
+
+---
+
+## 📌 13. Dynamisches Audio- & Sound-Design
+- **Zonen-Hintergrundmusik (BGM)**:
+  - Zone 1 (Elementar-Wiese): Friedliche, magische Fantasy-Flöten & Harfen.
+  - Zone 2 (Kristall-Schlucht): Mystische, atmosphärische Glockenspiel-Klänge.
+  - Zone 3 (Koloss-Gipfel): Düstere, drängende Streicher & Windgeräusche.
+  - Boss-Arena (Kristall-Koloss): Epische Orchester-Choräle (Elden Ring / Souls-Style).
+- **3D Positional SFX**:
+  - Kristall-Mining: Kristallines Klopfen mit variiertem Pitch (`math.random(92, 108)/100`).
+  - Kessel-Brodeln: Sanftes Blubbern & magisches Gong-Signal bei erfolgreichem Craft.
+  - Waffenschwünge & Treffer: Wuchtige Slash- & Impact-Sounds.
+  - UI: Feine, zarte Glass-Klickgeräusche für GlassButton.
+
+---
+
+## 📌 14. Umfassender Anti-Exploit- & Hardening-Katalog
+- **Network Rate Limiting (Token Bucket)**:
+  - Max. 12 Events/Sekunde für Angriffe (`AttackSwing_RE`).
+  - Max. 2 Requests/Sekunde für Mining (`HarvestOre_RF`).
+  - Max. 5 Requests/Sekunde für Crafting & Shop (`CraftRecipe_RF`, `SellItems_RF`).
+- **Payload-Sanitization**:
+  - Alle numerischen Parameter werden strikt auf positive Ganzzahlen (`typeof(n) == "number" and n == math.floor(n) and n > 0 and n <= 100000`) validiert.
+  - String-IDs werden gegen statische Whitelists (`OresConfig`, `RecipesConfig`, `WeaponsConfig`) abgeglichen.
+- **Anti-Speedhack & Anti-Fly**:
+  - Serverseitiger Positionsvergleich: Maximale Bewegung $\le 45$ Studs/s ohne legitimen Dash-Skill.
+  - Raycast-Wandprüfung für Teleport-Skills (`Anti-Noclip`).
+- **Graceful Server Shutdown**:
+  - `game:BindToClose` sichert alle offenen Profile innerhalb von 25 Sekunden transaktional ab.
+
+
